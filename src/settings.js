@@ -40,6 +40,7 @@ const getConfig = function () {
     triedConfs.push(configPath);
 
     let data;
+    let nightwatchConfig;
     try {
       data = fs.readFileSync(configPath, "utf8");
     } catch (e) {
@@ -62,9 +63,9 @@ const getConfig = function () {
       logger.log(`Found nightwatch configuration at ${configPath}`);
       let configurationExtension = path.extname(configPath);
       if(configurationExtension === '.js'){
-       const nightwatchConfig = require(configPath);
+        nightwatchConfig = require(configPath);
       }else{
-       const nightwatchConfig = JSON.parse(data);
+        nightwatchConfig = JSON.parse(data);
      }
       return {
         nightwatchConfig
