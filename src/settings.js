@@ -62,11 +62,13 @@ const getConfig = function () {
     } else {
       logger.log(`Found nightwatch configuration at ${configPath}`);
       let configurationExtension = path.extname(configPath);
-      if(configurationExtension === '.js'){
-        nightwatchConfig = require(configPath);
-      }else{
-        nightwatchConfig = JSON.parse(data);
-     }
+        if(configurationExtension === '.js'){
+          nightwatchConfig = require(configPath);
+        }else if(configurationExtension === '.json'){
+          nightwatchConfig = JSON.parse(data);
+        }else{
+        logger.log(`Extension of configuration file is not supported!`);
+      }
       return {
         nightwatchConfig
       };
