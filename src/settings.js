@@ -60,7 +60,12 @@ const getConfig = function () {
       }
     } else {
       logger.log(`Found nightwatch configuration at ${configPath}`);
-      const nightwatchConfig = JSON.parse(data);
+      let configurationExtension = path.extname(configPath);
+      if(configurationExtension === '.js'){
+       const nightwatchConfig = require(configPath);
+      }else{
+       const nightwatchConfig = JSON.parse(data);
+     }
       return {
         nightwatchConfig
       };
