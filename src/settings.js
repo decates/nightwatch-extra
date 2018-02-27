@@ -39,16 +39,21 @@ const getConfig = function () {
     const configPath = configLocations.shift();
     triedConfs.push(configPath);
 
-    let data;
     let nightwatchConfig;
+    let configurationExtension = path.extname(configPath);
     try {
-      data = fs.readFileSync(configPath, "utf8");
+      if (configurationExtension === '.js'){
+        nightwatchConfig = require(configPath);
+      } else {
+        const data = fs.readFileSync(configPath, "utf8");
+        nightwatchConfig = JSON.parse(data);
+      }
     } catch (e) {
       // Eat this exception because we handle the lack of data below
     }
 
     /* istanbul ignore if */
-    if (!data) {
+    if (!nightwatchConfig) {
       if (configLocations.length === 0) {
         logger.err("nightwatch-extra has exhausted its "
           + "search for nightwatch configuration file.");
@@ -61,14 +66,6 @@ const getConfig = function () {
       }
     } else {
       logger.log(`Found nightwatch configuration at ${configPath}`);
-      let configurationExtension = path.extname(configPath);
-        if(configurationExtension === '.js'){
-          nightwatchConfig = require(configPath);
-        }else if(configurationExtension === '.json'){
-          nightwatchConfig = JSON.parse(data);
-        }else{
-        logger.log(`Extension of configuration file is not supported!`);
-      }
       return {
         nightwatchConfig
       };
